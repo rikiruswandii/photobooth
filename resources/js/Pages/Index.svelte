@@ -3,8 +3,13 @@
     import { fade } from "svelte/transition";
     import { flip } from "svelte/animate";
     import HomeSkeleton from "../Shared/Skeletons/HomeSkeleton.svelte";
+    import SutterSoundFile from "../../assets/sounds/camera-shutter-199580.mp3";
+    import ClockSoundFile from "../../assets/sounds/slow-cinematic-clock-ticking-tension-323080.mp3";
 
     let loading = true;
+
+    let errorMessage = '';
+
     let video;
     let canvas;
     let images = [];
@@ -22,9 +27,11 @@
             .then((stream) => {
                 video.srcObject = stream;
                 video.play();
+                errorMessage = '';
             })
             .catch((err) => {
                 console.error("Gagal mengakses kamera:", err);
+                errorMessage = 'Kamera tidak tersedia atau akses ditolak.';
             });
     }
 
@@ -36,10 +43,8 @@
 
     let currentCountdown = defaultCountdown;
     let showCountdown = false;
-    let shutterSound = new Audio("/assets/sounds/camera-shutter-199580.mp3");
-    let countdownSound = new Audio(
-        "/assets/sounds/slow-cinematic-clock-ticking-tension-323080.mp3",
-    );
+    let shutterSound = new Audio(SutterSoundFile);
+    let countdownSound = new Audio(ClockSoundFile);
 
     async function captureImage() {
         showCountdown = true;
@@ -82,18 +87,19 @@
             loading = false;
             startCamera();
         }, 1500);
+        return () => {
+            if (video && video.srcObject) {
+                video.srcObject.getTracks().forEach((track) => track.stop());
+            }
+        };
     });
 </script>
 
-<div
-    class="min-h-screen bg-gradient-to-br from-purple-500 via-pink-400 to-blue-500 flex flex-col items-center justify-center p-6 text-white font-sans"
->
+<div class="min-h-screen bg-gradient-to-br from-purple-500 via-pink-400 to-blue-500 flex flex-col items-center justify-center p-6 text-white font-sans">
     {#if loading}
         <HomeSkeleton />
     {:else}
-        <h1
-            class="text-3xl md:text-4xl font-bold mb-6 text-center tracking-wide drop-shadow"
-        >
+        <h1 class="text-3xl md:text-4xl font-bold mb-6 text-center tracking-wide drop-shadow">
             📸 Photobooth
         </h1>
 
@@ -143,6 +149,14 @@
                             {currentCountdown}
                         </div>
                     {/if}
+
+                    {#if errorMessage}
+                        <div
+                            class="absolute inset-0 flex items-center justify-center bg-black/25 z-10 text-white text-2xl font-bold rounded-xl"
+                        >
+                            {errorMessage}
+                        </div>
+                    {/if}
                 </div>
 
                 <canvas bind:this={canvas} class="hidden"></canvas>
@@ -158,7 +172,11 @@
             </div>
 
             <!-- Galeri Foto -->
-            <div class={images.length === 0 ? "hidden" : "flex-1 transition-width duration-300 ease"}>
+            <div
+                class={images.length === 0
+                    ? "hidden"
+                    : "flex-1 transition-width duration-300 ease"}
+            >
                 <div
                     class={images.length === 0
                         ? "hidden"
@@ -169,7 +187,7 @@
                             <img
                                 src={img}
                                 alt="Captured"
-                                class="w-1/2 mx-auto rounded-lg shadow-lg transform transition duration-500 hover:scale-100 hover:shadow-2xl"
+                                class="w-1/2 mx-auto rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl"
                                 transition:fade={{ duration: 500 }}
                             />
                         </div>
