@@ -175,8 +175,18 @@
 </script>
 
 <div
-    class="min-h-screen bg-gradient-to-br from-purple-500 via-pink-400 to-blue-500 flex flex-col items-center justify-center p-6 text-white font-sans"
+    class="relative min-h-screen bg-gradient-to-b from-black via-indigo-900 to-black flex flex-col items-center justify-center p-6 overflow-hidden text-white font-sans"
 >
+    <!-- Lapisan bintang -->
+    <div
+        class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 mix-blend-screen"
+    ></div>
+
+    <!-- Lapisan nebula -->
+    <div
+        class="absolute w-[60vw] h-[60vw] top-1/4 left-1/4 bg-gradient-to-br from-purple-500 via-pink-500 to-transparent rounded-full blur-3xl opacity-20 mix-blend-screen animate-pulse"
+    ></div>
+
     {#if loading}
         <HomeSkeleton />
     {:else}
@@ -186,25 +196,23 @@
             📸 Photobooth
         </h1>
 
-        <div class="flex justify-start items-start gap-4 mb-4">
-            <!-- Ganti dropdown frame -->
+        <div class="flex justify-start items-start gap-4 mb-4 z-10 relative">
             <select
                 id="layout"
                 name="layout"
                 bind:value={selectedLayout}
-                class="block w-full rounded border-gray-300 shadow-sm focus:ring-amber-500 focus:border-amber-500 h-10 bg-white text-black"
+                class="relative z-10 block w-full rounded border border-pink-500 bg-black text-pink-300 shadow-md focus:ring-pink-400 focus:border-pink-400 h-10 transition duration-300"
             >
                 {#each photoLayouts as layout}
                     <option value={layout}>{layout.label}</option>
                 {/each}
             </select>
 
-            <!-- Dropdown Delay -->
             <select
                 id="delay"
                 name="delay"
                 bind:value={selectedDelay}
-                class="block w-full rounded border-gray-300 shadow-sm focus:ring-amber-500 focus:border-amber-500 h-10 bg-white text-black"
+                class="relative z-10 block w-full rounded border border-pink-500 bg-black text-pink-300 shadow-md focus:ring-pink-400 focus:border-pink-400 h-10 transition duration-300"
             >
                 {#each delayes as delay}
                     <option value={delay}>delay {delay}</option>
@@ -251,7 +259,7 @@
                 <div class="flex justify-center">
                     <button
                         on:click={captureImage}
-                        class="bg-white text-purple-700 font-semibold px-6 py-3 rounded-full shadow hover:shadow-xl hover:scale-105 transform transition-all duration-300"
+                        class="bg-transparent text-pink-400 font-semibold px-6 py-3 rounded-md border border-pink-500 shadow-lg hover:bg-pink-500 hover:text-white hover:shadow-pink-500/50 hover:scale-105 transform transition-all duration-300"
                     >
                         📷 Ambil Foto
                     </button>
