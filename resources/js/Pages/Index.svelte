@@ -7,6 +7,7 @@
     import SutterSoundFile from "../../assets/sounds/camera-shutter-199580.mp3";
     import ClockSoundFile from "../../assets/sounds/slow-cinematic-clock-ticking-tension-323080.mp3";
     import { faCamera } from "@fortawesome/free-solid-svg-icons";
+    import { router } from "@inertiajs/svelte";
 
     let loading = true;
 
@@ -160,6 +161,18 @@
         }
     }
 
+    let data = {
+        images: images,
+        max: maxImages
+    }
+
+    function handleSubmit() {
+        router.visit("/process", {
+            method: "get",
+            data: { data },
+        });
+    }
+
     onMount(async () => {
         setTimeout(async () => {
             loading = false;
@@ -258,11 +271,11 @@
 
                 <div class="flex justify-center">
                     {#if images.length > 0}
-                        <a href="/process"
+                        <button on:click={handleSubmit()}
                             class="bg-transparent text-pink-400 font-semibold px-6 py-3 rounded-md border border-pink-500 shadow-lg hover:bg-pink-500 hover:text-white hover:shadow-pink-500/50 hover:scale-105 transform transition-all duration-300"
                         >
                             📷 Selanjutnya
-                        </a>
+                        </button>
                     {:else}
                         <button
                             on:click={captureImage}

@@ -2,7 +2,6 @@
     import { onMount, tick } from "svelte";
     import ProcessSkeleton from "../Shared/Skeletons/ProcessSkeleton.svelte";
     let loading = true;
-    let title = "Hallo";
     onMount(async () => {
         setTimeout(async () => {
             loading = false;
@@ -28,11 +27,26 @@
         <ProcessSkeleton />
     {:else}
         <h1
-            class="text-3xl md:text-4xl font-bold mb-6 text-center tracking-wide drop-shadow"
+            class="text-3xl md:text-4xl font-bold mb-8 text-center tracking-wide drop-shadow"
         >
             📸 Photobooth
         </h1>
 
-        <h1>{title}</h1>
+        <div class="grid grid-cols-5 gap-4 w-full max-w-7xl mx-auto">
+            <div class="col-span-2 space-y-4">
+                <div
+                    class="w-full aspect-video bg-white/40 rounded-xl shadow-2xl border-4 border-white/20"
+                ></div>
+            </div>
+            <div class="col-span-3 space-y-4">
+                <div
+                    class="w-full aspect-video bg-white/40 rounded-xl shadow-2xl border-4 border-white/20"
+                ></div>
+                <div class="flex gap-4">
+                    <div class="h-10 w-full bg-white/40 rounded"></div>
+                    <div class="h-10 w-full bg-white/40 rounded"></div>
+                </div>
+            </div>
+        </div>
     {/if}
 </div>
