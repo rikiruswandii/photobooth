@@ -257,12 +257,20 @@
                 ></canvas>
 
                 <div class="flex justify-center">
-                    <button
-                        on:click={captureImage}
-                        class="bg-transparent text-pink-400 font-semibold px-6 py-3 rounded-md border border-pink-500 shadow-lg hover:bg-pink-500 hover:text-white hover:shadow-pink-500/50 hover:scale-105 transform transition-all duration-300"
-                    >
-                        📷 Ambil Foto
-                    </button>
+                    {#if images.length > 0}
+                        <a href="/process"
+                            class="bg-transparent text-pink-400 font-semibold px-6 py-3 rounded-md border border-pink-500 shadow-lg hover:bg-pink-500 hover:text-white hover:shadow-pink-500/50 hover:scale-105 transform transition-all duration-300"
+                        >
+                            📷 Selanjutnya
+                        </a>
+                    {:else}
+                        <button
+                            on:click={captureImage}
+                            class="bg-transparent text-pink-400 font-semibold px-6 py-3 rounded-md border border-pink-500 shadow-lg hover:bg-pink-500 hover:text-white hover:shadow-pink-500/50 hover:scale-105 transform transition-all duration-300"
+                        >
+                            📷 Ambil Foto
+                        </button>
+                    {/if}
                 </div>
             </div>
 
