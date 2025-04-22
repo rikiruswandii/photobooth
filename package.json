@@ -22,6 +22,7 @@
         "@fortawesome/svelte-fontawesome": "^0.2.3",
         "@inertiajs/inertia": "^0.11.1",
         "@inertiajs/svelte": "^2.0.7",
+        "facefilter": "^3.3.6",
         "svelte": "^5.25.9"
     }
 }
