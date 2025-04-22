@@ -8,12 +8,14 @@
     import ClockSoundFile from "../../assets/sounds/slow-cinematic-clock-ticking-tension-323080.mp3";
     import { faCamera } from "@fortawesome/free-solid-svg-icons";
     import { router } from "@inertiajs/svelte";
+    import FilterCamera from "../Shared/FilterCamera.svelte";
 
     let loading = true;
 
     let errorMessage = "";
 
     let video;
+    let selectedFilter = "none";
     let canvas;
     let images = [];
 
@@ -112,6 +114,7 @@
 
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
+            context.filter = selectedFilter;
             context.drawImage(video, 0, 0);
 
             const newImage = canvas.toDataURL("image/png");
@@ -147,6 +150,7 @@
 
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
+                context.filter = selectedFilter;
                 context.drawImage(video, 0, 0);
 
                 const newImage = canvas.toDataURL("image/png");
@@ -161,16 +165,8 @@
         }
     }
 
-    let data = {
-        images: images,
-        max: maxImages
-    }
-
     function handleSubmit() {
-        router.visit("/process", {
-            method: "get",
-            data: { data },
-        });
+        router.post("/process", { images });
     }
 
     onMount(async () => {
@@ -239,7 +235,7 @@
 
             <!-- Kamera -->
             <div class="col-span-3 space-y-4">
-                <div class="relative w-full aspect-video">
+                <div class="relative w-full aspect-video" style="filter: {selectedFilter};">
                     <video
                         bind:this={video}
                         autoplay
@@ -269,9 +265,16 @@
                 <canvas bind:this={canvas} aria-hidden="true" class="hidden"
                 ></canvas>
 
+                <div
+                    class="flex justify-center items-center mb-4 z-10 relative"
+                >
+                    <FilterCamera bind:selectedFilter />
+                </div>
+
                 <div class="flex justify-center">
                     {#if images.length > 0}
-                        <button on:click={handleSubmit()}
+                        <button
+                            on:click={handleSubmit}
                             class="bg-transparent text-pink-400 font-semibold px-6 py-3 rounded-md border border-pink-500 shadow-lg hover:bg-pink-500 hover:text-white hover:shadow-pink-500/50 hover:scale-105 transform transition-all duration-300"
                         >
                             📷 Selanjutnya
