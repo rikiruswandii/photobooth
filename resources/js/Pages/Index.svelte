@@ -9,6 +9,8 @@
     import { faCamera } from "@fortawesome/free-solid-svg-icons";
     import { router } from "@inertiajs/svelte";
     import FilterCamera from "../Shared/FilterCamera.svelte";
+    import { JEELIZFACEFILTER } from "facefilter";
+    const NN_DEFAULT = '/NN_DEFAULT.json';
 
     let loading = true;
 
@@ -36,11 +38,50 @@
                 video.srcObject = stream;
                 video.play();
                 errorMessage = "";
+
+                // Pastikan canvas sudah tersedia sebelum inisialisasi JeelizFaceFilter
+                if (canvas) {
+                    initFaceFilter();
+                } else {
+                    console.error("Canvas tidak ditemukan.");
+                }
             })
             .catch((err) => {
                 console.error("Gagal mengakses kamera:", err);
                 errorMessage = "Kamera tidak tersedia atau akses ditolak.";
             });
+    }
+
+    function initFaceFilter() {
+        console.log("nn :". NN_DEFAULT);
+
+        // Periksa jika canvas dan video benar-benar ada
+        if (!canvas || !video) {
+            console.error("Elemen video atau canvas tidak ditemukan.");
+            return;
+        }
+
+        // Inisialisasi JeelizFaceFilter dengan video dan canvas
+        JEELIZFACEFILTER.init({
+            canvasId: canvas.id,
+            MNCPath: NN_DEFAULT,
+            callbackReady: function (err_code) {
+                if (err_code) {
+                    console.error(
+                        "Error saat inisialisasi JeelizFaceFilter:",
+                        err_code,
+                    );
+                } else {
+                    console.log("JeelizFaceFilter siap!");
+                }
+            },
+            callbackTrack: function (detectResult) {
+                // Setiap kali wajah terdeteksi, lakukan sesuatu (misal: apply filter)
+                if (detectResult.is_detected) {
+                    // Terapkan filter atau efek pada wajah
+                }
+            },
+        });
     }
 
     let defaultCountdown;
@@ -235,7 +276,10 @@
 
             <!-- Kamera -->
             <div class="col-span-3 space-y-4">
-                <div class="relative w-full aspect-video" style="filter: {selectedFilter};">
+                <div
+                    class="relative w-full aspect-video"
+                    style="filter: {selectedFilter};"
+                >
                     <video
                         bind:this={video}
                         autoplay
@@ -262,7 +306,7 @@
                     {/if}
                 </div>
 
-                <canvas bind:this={canvas} aria-hidden="true" class="hidden"
+                <canvas bind:this={canvas} id="face-canvas" aria-hidden="true" class="hidden"
                 ></canvas>
 
                 <div

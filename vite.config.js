@@ -12,4 +12,9 @@ export default defineConfig({
         tailwindcss(),
         svelte(),
     ],
+    resolve: {
+        alias: {
+            '@facefilter': '/node_modules/facefilter'
+        }
+    }
 });
